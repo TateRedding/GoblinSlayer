@@ -4,34 +4,18 @@ let goldPerSecond = 0;
 const totalGoldDisplay = document.getElementById("total_gold");
 const goldPerSecondDisplay = document.getElementById("gold_per_second");
 
-let totalFootsoldiers = 0;
-let totalKnights = 0;
-let totalMountedKnights = 0;
-let totalCannons = 0;
-const upgradeTotals = [totalFootsoldiers, totalKnights, totalMountedKnights, totalCannons]
-
-const totalFootsoldiersDisplay = document.getElementById("total_footsolders");
-const totalKnightsDisplay = document.getElementById("total_knights");
-const totalMountedKnightsDisplay = document.getElementById("total_mounted_knights");
-const totalCannonsDisplay = document.getElementById("total_cannons");
 const upgradeTotalsDisplay = document.getElementsByClassName("upgrade_total");
+const upgradeTotals = Array.from(upgradeTotalsDisplay).map(element => Number(element.innerText.split(' ')[1]));
 
-let footsoldierCost = 10;
-let knightCost = 50;
-let mountedKnightCost = 150;
-let cannonCost = 500;
-const costs = [footsoldierCost, knightCost, mountedKnightCost, cannonCost];
+const upgradeButtons = document.getElementsByClassName("upgrade_button");
+const costs = Array.from(upgradeButtons).map(element => Number(element.innerText.split(' ')[1].slice(0, element.innerText.split(' ')[1].length-1)));
 
-const footsoldierGPS = 1;
-const knightGPS = 5;
-const mountedKnightGPS = 10;
-const cannonGPS = 25;
-const gpsAmounts = [footsoldierGPS, knightGPS, mountedKnightGPS, cannonGPS];
+const gps = document.getElementsByClassName("gps");
+const gpsAmounts = Array.from(gps).map(element => Number(element.innerText.split(' ')[0]));
 
-const upgrades = document.getElementById("upgrades");
+const upgradeDiv = document.getElementById("upgrades");
 
 const goblinButton = document.getElementById("goblin_button");
-const upgradeButtons = document.getElementsByClassName("upgrade_button");
 
 const message = document.getElementById("changing_message");
 const messages = [
@@ -81,9 +65,7 @@ const addUpgrade = (button) => {
 }
 
 checkAffordability();
-
 setInterval(incrementGold, 1000);
-
 setInterval(() => {
     if (totalGold > 0) {
         const messageIndex = Math.floor(Math.random() * messages.length);
@@ -96,7 +78,7 @@ goblinButton.addEventListener("click", () => {
     updateTotalGoldDisplay();
 });
 
-upgrades.addEventListener("click", (clickEvent) => {
+upgradeDiv.addEventListener("click", (clickEvent) => {
     if (clickEvent.target.nodeName === "BUTTON" && !clickEvent.target.matches(".cant_afford")) {
         addUpgrade(clickEvent.target);
     }
