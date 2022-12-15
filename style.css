@@ -60,7 +60,7 @@ img {
     width: 128px;
 }
 
-.upgrade {
+.unit {
     display: none;
     justify-content: space-between;
     align-items: center;
@@ -71,15 +71,15 @@ img {
     width: 80%;
 }
 
-.upgrade_text {
+.unit_text {
     text-align: center;
 }
 
-.upgrade_total {
+.unit_total {
     font-weight: bold;
 }
 
-.upgrade_button, .right_buffer {
+.unit_button, .right_buffer {
     width: 150px;
 }
 

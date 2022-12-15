@@ -3,7 +3,7 @@
 const state = {
     totalGold: 0,
     goldPerSecond: 0,
-    upgrades: [
+    units: [
         {
             name: "FootSoldier",
             cost: 10,
@@ -49,14 +49,14 @@ const state = {
 
 // DOM SELECTORS
 
-const upgradeDiv = document.getElementById("upgrades");
-const upgrades = document.getElementsByClassName("upgrade");
+const unitDiv = document.getElementById("units");
+const units = document.getElementsByClassName("unit");
 
 const totalGoldDisplay = document.getElementById("total_gold");
 const goldPerSecondDisplay = document.getElementById("gold_per_second");
-const upgradeTotalsDisplay = document.getElementsByClassName("upgrade_total");
+const unitTotalsDisplay = document.getElementsByClassName("unit_total");
 
-const upgradeButtons = document.getElementsByClassName("upgrade_button");
+const unitButtons = document.getElementsByClassName("unit_button");
 const goblinButton = document.getElementById("goblin_button");
 
 const message = document.getElementById("changing_message");
@@ -68,9 +68,9 @@ goblinButton.addEventListener("click", () => {
     updateTotalGoldDisplay();
 });
 
-upgradeDiv.addEventListener("click", (clickEvent) => {
+unitDiv.addEventListener("click", (clickEvent) => {
     if (clickEvent.target.nodeName === "BUTTON" && !clickEvent.target.matches(".cant_afford")) {
-        addUpgrade(clickEvent.target);
+        addunit(clickEvent.target);
     }
 })
 
@@ -79,7 +79,7 @@ upgradeDiv.addEventListener("click", (clickEvent) => {
 const updateTotalGoldDisplay = () => {
     totalGoldDisplay.innerText = `Total Gold: ${state.totalGold}`;
     checkAffordability();
-    unhideUpgrades();
+    unhideunits();
 }
 
 const incrementGold = () => {
@@ -88,37 +88,37 @@ const incrementGold = () => {
 }
 
 const checkAffordability = () => {
-    for (let i = 0; i < upgradeButtons.length; i++) {
-        currList = upgradeButtons[i].classList;
-        (state.totalGold >= state.upgrades[i].cost) ? currList.remove("cant_afford") : currList.add("cant_afford");
+    for (let i = 0; i < unitButtons.length; i++) {
+        currList = unitButtons[i].classList;
+        (state.totalGold >= state.units[i].cost) ? currList.remove("cant_afford") : currList.add("cant_afford");
     }
 }
 
-const unhideUpgrades = () => {
-    for (let i = 0; i < state.upgrades.length; i++) {
-        let currUpgrade = state.upgrades[i];
-        if (currUpgrade.isHidden === true && state.totalGold >= currUpgrade.cost) {
-            currUpgrade.isHidden = false;
-            upgrades[i].style.display = "flex";
+const unhideunits = () => {
+    for (let i = 0; i < state.units.length; i++) {
+        let currunit = state.units[i];
+        if (currunit.isHidden === true && state.totalGold >= currunit.cost) {
+            currunit.isHidden = false;
+            units[i].style.display = "flex";
         }
         
     };
 };
 
-const addUpgrade = (button) => {
-    const index = Array.from(upgradeButtons).indexOf(button);
-    const upgrade = state.upgrades[index];
-    state.totalGold -= Math.floor(upgrade.cost);
+const addunit = (button) => {
+    const index = Array.from(unitButtons).indexOf(button);
+    const unit = state.units[index];
+    state.totalGold -= Math.floor(unit.cost);
     updateTotalGoldDisplay();
 
-    state.goldPerSecond += upgrade.gps;
+    state.goldPerSecond += unit.gps;
     goldPerSecondDisplay.innerText = `Gold per second: ${state.goldPerSecond}`;
 
-    upgrade.total++;
-    upgradeTotalsDisplay[index].innerText = `Total: ${upgrade.total}`;
+    unit.total++;
+    unitTotalsDisplay[index].innerText = `Total: ${unit.total}`;
 
-    upgrade.cost *= 1.2;
-    upgradeButtons[index].innerText = `Buy: ${Math.floor(upgrade.cost)}g`;
+    unit.cost *= 1.2;
+    unitButtons[index].innerText = `Buy: ${Math.floor(unit.cost)}g`;
 
 }
 
