@@ -15,17 +15,14 @@ p, button {
 
 section {
     width: 50%;
-    height: 100vh;
+    min-height: 100vh;
 }
 
-.left, .right {
+.left {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.left {
     background-color: #a8896c;
 }
 
@@ -34,6 +31,10 @@ section {
     flex-direction: column;
     align-items: center;
     height: 50%;
+}
+
+img {
+    width: 128px;
 }
 
 #goblin_button {
@@ -53,33 +54,67 @@ h1 {
 }
 
 .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: #61b292;
 }
 
-img {
-    width: 128px;
+.headers {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
-.unit {
-    display: none;
-    justify-content: space-between;
+.headers, .bottom_buffer {
+    height: 10%;
+}
+
+.headers > h2 {
+    font-size: 3em;
+}
+
+.units_and_upgrades {
+    display: flex;
+    justify-content: center;
     align-items: center;
-    padding: 0 1em;
+}
+
+#units, #upgrades {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.column_title {
+    justify-self: flex-start;
+}
+
+.unit, .upgrade {
+    display: none;
+    justify-content: space-around;
+    align-items: center;
     border: 2px solid black;
     background-color: #aed09e;
     margin-bottom: 5px;
-    width: 80%;
+    width: 90%;
 }
 
-.unit_text {
+.unit_text, .upgrade_text {
     text-align: center;
+    width: 50%
+}
+
+.upgrade_description {
+    font-size: 1em;
 }
 
 .unit_total {
     font-weight: bold;
 }
 
-.unit_button, .right_buffer {
+.unit_button, .upgrade_button {
     width: 150px;
 }
 

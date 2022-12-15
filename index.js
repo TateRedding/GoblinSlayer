@@ -3,6 +3,7 @@
 const state = {
     totalGold: 0,
     goldPerSecond: 0,
+    goldPerClick: 1,
     units: [
         {
             name: "FootSoldier",
@@ -33,6 +34,48 @@ const state = {
             isHidden: true
         }
     ],
+    upgrades: [
+        {
+            name: "Fast Fingers",
+            cost: 100,
+            isHidden: true,
+            triggerEffect: () => {
+                state.goldPerClick *= 2;
+            }
+        },
+        {
+            name: "Footsoldier Efficiency",
+            cost: 100,
+            isHidden: true,
+            triggerEffect: () => {
+                state.units[0].gps *= 2;
+            }
+        },
+        {
+            name: "Knight Efficiency",
+            cost: 500,
+            isHidden: true,
+            triggerEffect: () => {
+                state.units[1].gps *= 2;
+            }
+        },
+        {
+            name: "Mounted Knight Efficiency",
+            cost: 1500,
+            isHidden: true,
+            triggerEffect: () => {
+                state.units[2].gps *= 2;
+            }
+        },
+        {
+            name: "Cannon Efficiency",
+            cost: 5000,
+            isHidden: true,
+            triggerEffect: () => {
+                state.units[3].gps *= 2;
+            }
+        }
+    ],
     messages: [
         "Poke goblin, ???, profit!",
         "You're pretty good at this!",
@@ -50,13 +93,19 @@ const state = {
 // DOM SELECTORS
 
 const unitDiv = document.getElementById("units");
+const upgradeDiv = document.getElementById("upgrades");
+
 const units = document.getElementsByClassName("unit");
+const upgrades = document.getElementsByClassName("upgrade");
 
 const totalGoldDisplay = document.getElementById("total_gold");
 const goldPerSecondDisplay = document.getElementById("gold_per_second");
+const goldPerClickDisplay = document.getElementById("gold_per_click");
 const unitTotalsDisplay = document.getElementsByClassName("unit_total");
+const unitGPSDisplay = document.getElementsByClassName("gps");
 
 const unitButtons = document.getElementsByClassName("unit_button");
+const upgradeButtons = document.getElementsByClassName("upgrade_button");
 const goblinButton = document.getElementById("goblin_button");
 
 const message = document.getElementById("changing_message");
@@ -64,13 +113,19 @@ const message = document.getElementById("changing_message");
 // EVENT LISTENERS
 
 goblinButton.addEventListener("click", () => {
-    state.totalGold++;
+    state.totalGold += state.goldPerClick;
     updateTotalGoldDisplay();
 });
 
 unitDiv.addEventListener("click", (clickEvent) => {
     if (clickEvent.target.nodeName === "BUTTON" && !clickEvent.target.matches(".cant_afford")) {
-        addunit(clickEvent.target);
+        addUnit(clickEvent.target);
+    }
+})
+
+upgradeDiv.addEventListener("click", (clickEvent) => {
+    if (clickEvent.target.nodeName === "BUTTON" && !clickEvent.target.matches(".cant_afford")) {
+        purchaseUpgrade(clickEvent.target);
     }
 })
 
@@ -79,7 +134,19 @@ unitDiv.addEventListener("click", (clickEvent) => {
 const updateTotalGoldDisplay = () => {
     totalGoldDisplay.innerText = `Total Gold: ${state.totalGold}`;
     checkAffordability();
-    unhideunits();
+    unhideDivs(units, state.units);
+    unhideDivs(upgrades, state.upgrades);
+}
+
+const updateGoldDisplays = () => {
+    let newGPS = 0;
+    for (let i = 0; i < state.units.length; i++) {
+        newGPS += state.units[i].gps * state.units[i].total
+        unitGPSDisplay[i].innerText = `${state.units[i].gps} gold per second`
+    }
+    state.goldPerSecond = newGPS;
+    goldPerSecondDisplay.innerText = `Gold per second: ${state.goldPerSecond}`;
+    goldPerClickDisplay.innerText = `Gold per click: ${state.goldPerClick}`;
 }
 
 const incrementGold = () => {
@@ -88,24 +155,29 @@ const incrementGold = () => {
 }
 
 const checkAffordability = () => {
-    for (let i = 0; i < unitButtons.length; i++) {
-        currList = unitButtons[i].classList;
-        (state.totalGold >= state.units[i].cost) ? currList.remove("cant_afford") : currList.add("cant_afford");
+    updateButtonClassLists(unitButtons, state.units);
+    updateButtonClassLists(upgradeButtons, state.upgrades);
+}
+
+const updateButtonClassLists = (buttonArr, objArr) => {
+    for (let i = 0; i < buttonArr.length; i++) {
+        currList = buttonArr[i].classList;
+        (state.totalGold >= objArr[i].cost) ? currList.remove("cant_afford") : currList.add("cant_afford");
     }
 }
 
-const unhideunits = () => {
-    for (let i = 0; i < state.units.length; i++) {
-        let currunit = state.units[i];
-        if (currunit.isHidden === true && state.totalGold >= currunit.cost) {
-            currunit.isHidden = false;
-            units[i].style.display = "flex";
-        }
-        
-    };
-};
 
-const addunit = (button) => {
+const unhideDivs = (divArr, objArr) => {
+    for (let i = 0; i < objArr.length; i++) {
+        if (objArr[i].isHidden === true && state.totalGold >= objArr[i].cost) {
+            objArr[i].isHidden = false;
+            divArr[i].style.display = "flex";
+        }
+    }
+
+}
+
+const addUnit = (button) => {
     const index = Array.from(unitButtons).indexOf(button);
     const unit = state.units[index];
     state.totalGold -= Math.floor(unit.cost);
@@ -120,6 +192,18 @@ const addunit = (button) => {
     unit.cost *= 1.2;
     unitButtons[index].innerText = `Buy: ${Math.floor(unit.cost)}g`;
 
+}
+
+const purchaseUpgrade = (button) => {
+    const index = Array.from(upgradeButtons).indexOf(button);
+    const upgrade = state.upgrades[index];
+    state.totalGold -= upgrade.cost;
+    updateTotalGoldDisplay();
+
+    upgrade.cost *= 2;
+    upgradeButtons[index].innerText = `Buy: ${Math.floor(upgrade.cost)}g`
+    upgrade.triggerEffect();
+    updateGoldDisplays();
 }
 
 checkAffordability();
