@@ -44,7 +44,7 @@ const state = {
             }
         },
         {
-            name: "Footsoldier Efficiency",
+            name: "Sharper Swords",
             cost: 100,
             isHidden: true,
             triggerEffect: () => {
@@ -52,7 +52,7 @@ const state = {
             }
         },
         {
-            name: "Knight Efficiency",
+            name: "Improved Training Camps",
             cost: 500,
             isHidden: true,
             triggerEffect: () => {
@@ -60,7 +60,7 @@ const state = {
             }
         },
         {
-            name: "Mounted Knight Efficiency",
+            name: "Stronger Steeds",
             cost: 1500,
             isHidden: true,
             triggerEffect: () => {
@@ -68,7 +68,7 @@ const state = {
             }
         },
         {
-            name: "Cannon Efficiency",
+            name: "Extra Gunpowder",
             cost: 5000,
             isHidden: true,
             triggerEffect: () => {
@@ -86,7 +86,16 @@ const state = {
         "This is your entire existance.",
         "Those poor goblins, give it a rest!",
         "Do you know what 'genocide' means?",
-        "Don't forget to sharpen your sword!"
+        "Don't forget to sharpen your sword!",
+        "Hi Doug!",
+        "Hi Jonathan!",
+        "Goblins are now an endagered species.",
+        "I learned to kill goblins from FullSlash Academy!",
+        "If only I could use all this gold to pay for this bootcamp.",
+        "I'm sorry that I ever doubted you.",
+        "Full on goblin mode!",
+        "Something smells like iron...",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     ]
 }
 
@@ -197,12 +206,12 @@ const addUnit = (button) => {
 const purchaseUpgrade = (button) => {
     const index = Array.from(upgradeButtons).indexOf(button);
     const upgrade = state.upgrades[index];
-    state.totalGold -= upgrade.cost;
-    updateTotalGoldDisplay();
+    state.totalGold -= Math.floor(upgrade.cost);
 
-    upgrade.cost *= 2;
+    upgrade.cost *= 2.5;
     upgradeButtons[index].innerText = `Buy: ${Math.floor(upgrade.cost)}g`
     upgrade.triggerEffect();
+    updateTotalGoldDisplay();
     updateGoldDisplays();
 }
 
@@ -210,7 +219,7 @@ checkAffordability();
 setInterval(incrementGold, 1000);
 setInterval(() => {
     if (state.totalGold > 0) {
-        const messageIndex = Math.floor(Math.random() * state.messages.length);
-        message.innerText = state.messages[messageIndex];
+        const randomMessageIdx = Math.floor(Math.random() * state.messages.length);
+        message.innerText = state.messages[randomMessageIdx];
     }
 }, 10000);
