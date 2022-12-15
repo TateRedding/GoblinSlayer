@@ -61,7 +61,7 @@ img {
 }
 
 .upgrade {
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: center;
     padding: 0 1em;

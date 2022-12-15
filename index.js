@@ -8,25 +8,29 @@ const state = {
             name: "FootSoldier",
             cost: 10,
             gps: 1,
-            total: 0
+            total: 0,
+            isHidden: true
         },
         {
             name: "Knight",
             cost: 50,
             gps: 5,
-            total: 0
+            total: 0,
+            isHidden: true
         },
         {
             name: "Mounted Knight",
             cost: 150,
             gps: 10,
-            total: 0
+            total: 0,
+            isHidden: true
         },
         {
             name: "Cannon",
             cost: 500,
             gps: 25,
-            total: 0
+            total: 0,
+            isHidden: true
         }
     ],
     messages: [
@@ -46,6 +50,7 @@ const state = {
 // DOM SELECTORS
 
 const upgradeDiv = document.getElementById("upgrades");
+const upgrades = document.getElementsByClassName("upgrade");
 
 const totalGoldDisplay = document.getElementById("total_gold");
 const goldPerSecondDisplay = document.getElementById("gold_per_second");
@@ -74,6 +79,7 @@ upgradeDiv.addEventListener("click", (clickEvent) => {
 const updateTotalGoldDisplay = () => {
     totalGoldDisplay.innerText = `Total Gold: ${state.totalGold}`;
     checkAffordability();
+    unhideUpgrades();
 }
 
 const incrementGold = () => {
@@ -87,6 +93,17 @@ const checkAffordability = () => {
         (state.totalGold >= state.upgrades[i].cost) ? currList.remove("cant_afford") : currList.add("cant_afford");
     }
 }
+
+const unhideUpgrades = () => {
+    for (let i = 0; i < state.upgrades.length; i++) {
+        let currUpgrade = state.upgrades[i];
+        if (currUpgrade.isHidden === true && state.totalGold >= currUpgrade.cost) {
+            currUpgrade.isHidden = false;
+            upgrades[i].style.display = "flex";
+        }
+        
+    };
+};
 
 const addUpgrade = (button) => {
     const index = Array.from(upgradeButtons).indexOf(button);
